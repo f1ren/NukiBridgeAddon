@@ -67,6 +67,7 @@ class WebServer:
                  "ringactionTimestamp": None,  # How to get this from bt api?
                  "ringactionState": None,  # How to get this from bt api?
                  "timestamp": nuki.last_state["current_time"].isoformat().split(".")[0],
+                 "success": True,
                  }
 
         if nuki.device_type == DeviceType.OPENER:
@@ -281,13 +282,13 @@ if __name__ == "__main__":
         def pairing_completed(paired_nuki):
             logger.info(f"Pairing completed, nuki_public_key: {paired_nuki.nuki_public_key.hex()}")
             logger.info(f"Pairing completed, auth_id: {paired_nuki.auth_id.hex()}")
-            
+
             #modify nuki.yaml
             for ls in data["smartlock"]:
                 ls["nuki_public_key"] = paired_nuki.nuki_public_key.hex()
                 ls["auth_id"] = paired_nuki.auth_id.hex()
             data["server"]["paired"] = "true"
-            
+
             loop.stop()
         loop.create_task(nuki.pair(pairing_completed))
         loop.run_forever()

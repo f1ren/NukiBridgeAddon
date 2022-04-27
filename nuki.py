@@ -5,6 +5,7 @@ import logging
 import struct
 import hmac
 import enum
+import time
 
 import crc16
 import nacl.utils
@@ -193,10 +194,10 @@ class NukiManager:
     async def _detected_ibeacon(self, device, advertisement_data):
         if device.address in self._devices:
             #manufacturer_data = advertisement_data.manufacturer_data[76]
-            
+
             #changed to solve manufacturer_data issue
             manufacturer_data = advertisement_data.manufacturer_data.get(76, None)
-            
+
             if manufacturer_data[0] != 0x02:
                 # Ignore HomeKit advertisement
                 return
@@ -251,7 +252,7 @@ class Nuki:
     @property
     def device_type(self):
         return self._device_type
-    
+
     @device_type.setter
     def device_type(self, device_type: DeviceType):
         if device_type == DeviceType.OPENER:
